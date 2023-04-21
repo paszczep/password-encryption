@@ -18,13 +18,13 @@ def _fernet(password: str = 'user', salt: str = 'password'):
 
 
 def encrypt(content: str):
-    secret_content = bytes(content.encode())
+    content = bytes(content.encode())
     encryptor = _fernet()
-    token = encryptor.encrypt(secret_content)
-    return str(token)
+    token = encryptor.encrypt(content)
+    return str(token.decode())
 
 
 def decrypt(encrypted_content: str):
     decryptor = _fernet()
     decrypted_content = decryptor.decrypt(encrypted_content)
-    return decrypted_content
+    return str(decrypted_content.decode())

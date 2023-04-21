@@ -1,30 +1,31 @@
 from pathlib import Path
-from encode import encrypt
+from encode import encrypt, decrypt
 
 
 class CypherFile:
     def __init__(self, path):
         self.path = Path(path)
+        self.content = str()
 
-    def read(self):
+    def _read(self):
         with open(self.path, 'r') as read_file:
-            content = read_file.read()
-        return content
+            self.content = read_file.read()
 
     def _write(self):
-        raise NotImplementedError
+        with open(self.path, 'w') as write_file:
+            write_file.write(self.content)
 
     def cipher(self):
-        content = self.read()
-        secret_content = encrypt(content)
-        return secret_content
+        self._read()
+        self.content = encrypt(self.content)
+        self._write()
 
     def decypher(self):
-        raise NotImplementedError
+        self._read()
+        self.content = decrypt(self.content)
+        self._write()
 
 
 if __name__ == '__main__':
     file_path = Path().cwd() / 'text.txt'
-    print(repr(file_path), Path.is_file(file_path))
-    data_file = CypherFile(file_path).cipher()
-    print(data_file)
+    CypherFile(file_path).decypher()
